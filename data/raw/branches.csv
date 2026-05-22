@@ -1,0 +1,13 @@
+branch_id,branch_name,city,state,region
+BR001,Wall Street Main,New York,NY,North America
+BR002,Bay Area Tech,San Francisco,CA,North America
+BR003,Loop Branch,Chicago,IL,North America
+BR004,Canary Wharf,London,GB,EMEA
+BR005,La Défense,Paris,FR,EMEA
+BR006,Frankfurt Banking Centre,Frankfurt,HE,EMEA
+BR007,BKC Mumbai,Mumbai,MH,APAC
+BR008,Whitefield Tech Park,Bangalore,KA,APAC
+BR009,Marina Bay,Singapore,SG,APAC
+BR010,Shibuya Crossing,Tokyo,JP,APAC
+BR011,Faria Lima,Sao Paulo,SP,LATAM
+BR012,Polanco,Mexico City,MX,LATAM

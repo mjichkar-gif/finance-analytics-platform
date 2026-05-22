@@ -1,0 +1,82 @@
+customer_id,customer_name,customer_segment,risk_category,region,onboarding_date
+C00001,Lucas Johnson,Retail,LOW,EMEA,2020-07-25
+C00002,Ava Johnson,Corporate,HIGH,North America,2023-09-25
+C00003,Priya Sharma,Retail,LOW,North America,2025-04-17
+C00004,Yuki Davis,SMB,LOW,APAC,2019-01-27
+C00005,Emma Schmidt,Retail,LOW,APAC,2020-02-23
+C00006,Liam Mueller,Retail,MEDIUM,APAC,2019-06-27
+C00007,Ava Rao,SMB,HIGH,LATAM,2019-11-19
+C00008,Greta Wang,Private Banking,MEDIUM,APAC,2025-06-22
+C00009,Yuki Smith,Retail,LOW,APAC,2019-11-23
+C00010,Hiroshi Johnson,Retail,LOW,APAC,2020-10-28
+C00011,Isabella Martin,Retail,LOW,North America,2020-12-01
+C00012,Greta Lopez,Retail,LOW,EMEA,2022-08-21
+C00013,Priya Lopez,Private Banking,MEDIUM,LATAM,2022-01-01
+C00014,Liam Garcia,HNI,MEDIUM,APAC,2021-05-20
+C00015,Lucas Iyer,Retail,HIGH,LATAM,2020-08-08
+C00016,Carlos Tanaka,Retail,MEDIUM,APAC,2025-07-22
+C00017,  priya patel  ,Retail,LOW,EMEA,2024-09-18
+C00018,Chloe Smith,Corporate,HIGH,EMEA,2020-10-17
+C00019,Mia Schmidt,SMB,LOW,LATAM,2024-12-07
+C00020,Carlos Davis,Private Banking,LOW,North America,2025-01-08
+C00021,Carlos Dubois,Retail,LOW,LATAM,2019-01-14
+C00022,Ava Chen,HNI,MEDIUM,North America,2022-05-07
+C00023,Lucas Brown,,LOW,EMEA,2025-01-18
+C00024,Hans Sharma,SMB,LOW,North America,2023-01-26
+C00025,Sofia Lopez,Retail,HIGH,North America,2019-12-17
+C00026,Ava Iyer,Private Banking,HIGH,EMEA,2020-06-09
+C00027,Mia Iyer,HNI,LOW,LATAM,2021-05-17
+C00028,Greta Garcia,Corporate,LOW,APAC,2023-11-30
+C00029,Hans Rao,Retail,LOW,APAC,2019-03-28
+C00030,Raj Davis,Retail,LOW,North America,2019-08-30
+C00031,Hiroshi Smith,HNI,HIGH,North America,2024-10-06
+C00032,Hiroshi Chen,Corporate,LOW,EMEA,2025-05-27
+C00033,Raj Iyer,Retail,LOW,LATAM,2021-02-18
+C00034,Olivia Johnson,Corporate,LOW,LATAM,2024-03-27
+C00035,Ava Patel,Corporate,HIGH,North America,2019-09-06
+C00036,Wei Dubois,Private Banking,LOW,EMEA,2021-02-18
+C00037,Greta Rao,Retail,LOW,LATAM,2021-10-20
+C00038,Liam Rao,Private Banking,HIGH,North America,2019-07-27
+C00039,Lucas Davis,Private Banking,HIGH,EMEA,2020-11-12
+C00040,Mei Iyer,SMB,HIGH,North America,2020-11-05
+C00041,Wei Sharma,HNI,high,LATAM,2022-03-14
+C00042,Mei Davis,Corporate,LOW,EMEA,2022-04-30
+C00043,Yuki Patel,SMB,LOW,APAC,2019-08-23
+C00044,Priya Wilson,SMB,HIGH,EMEA,2019-08-21
+C00045,Hans Smith,Private Banking,LOW,North America,2021-08-21
+C00046,Wei Johnson,HNI,MEDIUM,North America,2019-12-02
+C00047,Mei Wilson,SMB,LOW,APAC,2021-04-16
+C00048,Mia Dubois,Retail,LOW,APAC,2024-02-16
+C00049,Aiden Smith,Retail,MEDIUM,North America,2019-10-28
+C00050,Greta Garcia,SMB,LOW,APAC,2019-10-09
+C00051,Hiroshi Martin,Retail,LOW,APAC,2024-12-06
+C00052,Aarav Davis,Retail,MEDIUM,EMEA,2021-12-19
+C00053,Olivia Johnson,Corporate,LOW,APAC,2021-05-12
+C00054,Ethan Dubois,Retail,MEDIUM,APAC,2024-09-01
+C00055,Chloe Chen,HNI,MEDIUM,North America,2023-10-01
+C00056,Carlos Patel,Retail,MEDIUM,APAC,2020-10-23
+C00057,Ava Rao,SMB,LOW,North America,2020-04-03
+C00058,Liam Tanaka,SMB,MEDIUM,EMEA,2023-10-27
+C00059,Noah Patel,Retail,HIGH,North America,2023-01-05
+C00060,Yuki Lopez,Corporate,LOW,LATAM,2020-09-25
+C00061,Hiroshi Suzuki,HNI,MEDIUM,LATAM,2019-04-12
+C00062,Emma Dubois,Corporate,LOW,EMEA,2021-12-28
+C00063,Emma Johnson,Retail,LOW,LATAM,2021-06-30
+C00064,Yuki Rao,Retail,MEDIUM,EMEA,2021-07-02
+C00065,Aarav Garcia,Retail,LOW,North America,2022-02-17
+C00066,Isabella Brown,Retail,HIGH,APAC,2019-04-24
+C00067,Olivia Chen,Retail,HIGH,APAC,2019-06-06
+C00068,Olivia Taylor,SMB,MEDIUM,APAC,2023-11-23
+C00069,Anita Brown,Retail,HIGH,EMEA,2021-11-09
+C00070,Priya Schmidt,Retail,HIGH,EMEA,2023-01-31
+C00071,Mei Smith,HNI,HIGH,APAC,2020-05-25
+C00072,Ava Wang,SMB,MEDIUM,APAC,2023-07-07
+C00073,Ethan Wang,SMB,LOW,LATAM,2020-12-13
+C00074,Anita Wilson,Retail,LOW,North America,2022-05-29
+C00075,Sofia Garcia,SMB,MEDIUM,APAC,2024-03-19
+C00076,Pierre Rao,Corporate,LOW,EMEA,2019-12-14
+C00077,Sofia Brown,Corporate,MEDIUM,North America,2021-08-20
+C00078,Mia Wang,Retail,LOW,North America,2019-07-09
+C00079,Hiroshi Iyer,SMB,MEDIUM,LATAM,2023-08-25
+C00080,Lucas Wilson,Retail,MEDIUM,LATAM,2023-06-25
+C00005,Duplicate Record,Retail,LOW,EMEA,2022-06-15

@@ -1,0 +1,131 @@
+version: 2
+
+models:
+
+  - name: stg_customers
+    description: Cleansed customer master. One row per active customer_id.
+    config:
+      contract:
+        enforced: false   # set true once stable to lock the contract
+    columns:
+      - name: customer_sk
+        description: MD5 surrogate of customer_id
+        tests: [not_null, unique]
+      - name: customer_id
+        description: Natural key from the source system
+        tests: [not_null, unique]
+      - name: customer_name
+        description: PII — display name
+        meta: { contains_pii: true }
+      - name: customer_segment
+        tests:
+          - accepted_values:
+              values: ['RETAIL','SMB','CORPORATE','PRIVATE BANKING','HNI','UNKNOWN']
+      - name: risk_category
+        tests:
+          - accepted_values:
+              values: ['LOW','MEDIUM','HIGH','UNKNOWN']
+      - name: region
+        tests:
+          - accepted_values:
+              values: ['North America','Emea','Apac','Latam']    # Initcap result
+              quote: true
+      - name: onboarding_date
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: "'2010-01-01'"
+              max_value: "current_date"
+
+  - name: stg_accounts
+    description: Cleansed account master.
+    columns:
+      - name: account_sk
+        tests: [not_null, unique]
+      - name: account_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_customers')
+              field: customer_id
+              # one known orphan exists in the seed, set severity warn for POC
+              severity: warn
+      - name: account_type
+        tests:
+          - accepted_values:
+              values: ['SAVINGS','CHECKING','CREDIT_CARD','BROKERAGE','WEALTH']
+      - name: account_status
+        tests:
+          - accepted_values:
+              values: ['ACTIVE','DORMANT','CLOSED','FROZEN','UNKNOWN']
+
+  - name: stg_transactions
+    description: Cleansed transactions (deduped, null amounts dropped).
+    columns:
+      - name: transaction_sk
+        tests: [not_null, unique]
+      - name: transaction_id
+        tests: [not_null, unique]
+      - name: account_id
+        tests:
+          - not_null
+          - relationships:
+              to: ref('stg_accounts')
+              field: account_id
+              severity: warn
+      - name: amount
+        tests:
+          - not_null
+      - name: currency
+        tests:
+          - accepted_values:
+              values: ['USD','INR','EUR','GBP']
+      - name: transaction_status
+        tests:
+          - accepted_values:
+              values: ['COMPLETED','FAILED','PENDING','REVERSED','BLOCKED','UNKNOWN']
+      - name: transaction_timestamp
+        tests: [not_null]
+
+  - name: stg_loans
+    description: Cleansed loan master with derived risk flags.
+    columns:
+      - name: loan_sk
+        tests: [not_null, unique]
+      - name: loan_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - not_null
+          - relationships: { to: ref('stg_customers'), field: customer_id }
+      - name: loan_status
+        tests:
+          - accepted_values:
+              values: ['ACTIVE','CLOSED','DEFAULTED','DELINQUENT','WRITTEN_OFF']
+      - name: loan_amount
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+      - name: is_default_flag
+        tests:
+          - accepted_values:
+              values: [0, 1]
+
+  - name: stg_branches
+    description: Cleansed branch reference.
+    columns:
+      - name: branch_sk
+        tests: [not_null, unique]
+      - name: branch_id
+        tests: [not_null, unique]
+      - name: region
+        tests: [not_null]
+
+  - name: stg_calendar_dim
+    description: Date dimension with fiscal calendar attributes.
+    columns:
+      - name: date_sk
+        tests: [not_null, unique]
+      - name: date_key
+        tests: [not_null, unique]

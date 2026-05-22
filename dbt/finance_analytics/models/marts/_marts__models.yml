@@ -1,0 +1,139 @@
+version: 2
+
+models:
+
+  # =====================  CORE DIMS  ======================
+  - name: dim_date
+    description: Conformed date dimension.
+    columns:
+      - name: date_sk
+        tests: [not_null, unique]
+      - name: date_key
+        tests: [not_null, unique]
+
+  - name: dim_customer
+    description: Current-effective customer dimension. Use snap_customers for SCD-2 history.
+    columns:
+      - name: customer_sk
+        tests: [not_null, unique]
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: customer_segment
+        tests:
+          - accepted_values:
+              values: ['RETAIL','SMB','CORPORATE','PRIVATE BANKING','HNI','UNKNOWN']
+      - name: risk_category
+        tests:
+          - accepted_values: { values: ['LOW','MEDIUM','HIGH','UNKNOWN'] }
+
+  - name: dim_account
+    columns:
+      - name: account_sk
+        tests: [not_null, unique]
+      - name: account_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - relationships:
+              to: ref('dim_customer')
+              field: customer_id
+              severity: warn
+
+  - name: dim_branch
+    columns:
+      - name: branch_sk
+        tests: [not_null, unique]
+      - name: branch_id
+        tests: [not_null, unique]
+
+  # =====================  FINANCE FACTS  ======================
+  - name: fct_transactions
+    description: Transaction-grain fact, incremental. Core of analytics.
+    columns:
+      - name: transaction_sk
+        tests: [not_null, unique]
+      - name: transaction_id
+        tests: [not_null, unique]
+      - name: account_id
+        tests:
+          - relationships:
+              to: ref('dim_account')
+              field: account_id
+              severity: warn
+      - name: amount_usd
+        tests:
+          - not_null
+      - name: transaction_status
+        tests:
+          - accepted_values:
+              values: ['COMPLETED','FAILED','PENDING','REVERSED','BLOCKED','UNKNOWN']
+
+  - name: fct_revenue_monthly
+    description: Aggregated revenue by month × segment × region. BQ-1.
+    columns:
+      - name: revenue_month
+        tests: [not_null]
+      - name: net_revenue_usd
+        tests: [not_null]
+
+  - name: fct_customer_profitability
+    description: Per-customer profitability and risk-value matrix. BQ-2.
+    columns:
+      - name: customer_id
+        tests: [not_null, unique]
+      - name: risk_value_segment
+        tests:
+          - accepted_values:
+              values: ['HIGH_RISK_HIGH_VALUE','HIGH_RISK_LOW_VALUE',
+                       'LOW_RISK_HIGH_VALUE','LOW_RISK_LOW_VALUE','MEDIUM_RISK']
+
+  - name: fct_branch_performance
+    description: Monthly branch performance. BQ-5.
+    columns:
+      - name: branch_id
+        tests: [not_null]
+      - name: performance_month
+        tests: [not_null]
+
+  - name: fct_quarterly_kpis
+    description: Executive quarterly KPIs with QoQ growth. BQ-6.
+    columns:
+      - name: revenue_quarter
+        tests: [not_null]
+
+  # =====================  RISK FACTS  ======================
+  - name: fct_loans
+    description: Loan-grain fact with derived risk flags.
+    columns:
+      - name: loan_sk
+        tests: [not_null, unique]
+      - name: loan_id
+        tests: [not_null, unique]
+      - name: customer_id
+        tests:
+          - relationships: { to: ref('dim_customer'), field: customer_id }
+      - name: outstanding_balance_est
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+
+  - name: fct_loan_portfolio
+    description: Portfolio aggregates by loan_type × region × segment. BQ-3.
+    columns:
+      - name: loan_type
+        tests: [not_null]
+      - name: default_rate_pct
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 0
+              max_value: 100
+
+  - name: fct_fraud_indicators
+    description: Flagged suspicious transactions. BQ-4.
+    columns:
+      - name: transaction_sk
+        tests: [not_null, unique]
+      - name: flag_count
+        tests:
+          - dbt_expectations.expect_column_values_to_be_between:
+              min_value: 1

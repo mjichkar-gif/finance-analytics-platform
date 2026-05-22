@@ -1,0 +1,46 @@
+# ============================================================================
+# profiles.yml  — example for the finance_analytics dbt project
+# ----------------------------------------------------------------------------
+# Place this file at ~/.dbt/profiles.yml on each engineer's machine.
+# Use environment variables for credentials; never commit the resolved file.
+# ============================================================================
+finance_analytics:
+  target: dev
+  outputs:
+
+    dev:
+      type:      snowflake
+      account:   "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user:      "{{ env_var('SNOWFLAKE_USER') }}"
+      password:  "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role:      DBT_TRANSFORMER
+      warehouse: WH_FIN_TRANSFORM
+      database:  FIN_ANALYTICS
+      schema:    DEV_<your_initials>          # personal sandbox schema
+      threads:   4
+      client_session_keep_alive: false
+      query_tag: "dbt:dev:{{ env_var('USER', 'unknown') }}"
+
+    ci:
+      type:      snowflake
+      account:   "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user:      "{{ env_var('SNOWFLAKE_USER') }}"
+      password:  "{{ env_var('SNOWFLAKE_PASSWORD') }}"
+      role:      DBT_TRANSFORMER
+      warehouse: WH_FIN_TRANSFORM
+      database:  FIN_ANALYTICS
+      schema:    CI_{{ env_var('BITBUCKET_BUILD_NUMBER', 'local') }}
+      threads:   8
+      query_tag: "dbt:ci:build={{ env_var('BITBUCKET_BUILD_NUMBER', 'local') }}"
+
+    prod:
+      type:      snowflake
+      account:   "{{ env_var('SNOWFLAKE_ACCOUNT') }}"
+      user:      "{{ env_var('SNOWFLAKE_USER') }}"
+      private_key_path: "{{ env_var('SNOWFLAKE_PRIVATE_KEY_PATH') }}"
+      role:      DBT_TRANSFORMER
+      warehouse: WH_FIN_TRANSFORM
+      database:  FIN_ANALYTICS
+      schema:    FIN_MART
+      threads:   8
+      query_tag: "dbt:prod"

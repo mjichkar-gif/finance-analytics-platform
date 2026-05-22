@@ -1,0 +1,26 @@
+# dbt
+target/
+dbt_packages/
+logs/
+.user.yml
+
+# Snowflake / credentials
+*.pem
+*.key
+profiles.yml
+.env
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# IDE
+.idea/
+.vscode/
+*.swp

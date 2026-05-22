@@ -1,0 +1,97 @@
+name: 'finance_analytics'
+version: '1.0.0'
+config-version: 2
+
+profile: 'finance_analytics'
+
+model-paths:    ["models"]
+analysis-paths: ["analyses"]
+test-paths:     ["tests"]
+seed-paths:     ["seeds"]
+macro-paths:    ["macros"]
+snapshot-paths: ["snapshots"]
+
+clean-targets:
+  - "target"
+  - "dbt_packages"
+  - "logs"
+
+# ----------------------------------------------------------------------------
+# Project-level vars
+# ----------------------------------------------------------------------------
+vars:
+  # Default reporting currency
+  reporting_currency: 'USD'
+
+  # Late-arriving overlap window for incremental txn loads (hours)
+  txn_late_arrival_overlap_hours: 24
+
+  # High-value transaction threshold in USD (fraud rule)
+  fraud_high_value_usd: 25000
+
+  # Round-number high-value combined rule
+  fraud_round_high_value_usd: 50000
+
+  # Account inactivity cut (days) used in customer profitability
+  dormant_account_days: 365
+
+# ----------------------------------------------------------------------------
+# Model configuration by layer (medallion enforced here)
+# ----------------------------------------------------------------------------
+models:
+  finance_analytics:
+
+    # ---- STAGING : views, cheap to rebuild
+    staging:
+      +schema: stg
+      +materialized: view
+      +tags: ['staging','daily']
+
+    # ---- INTERMEDIATE : ephemeral, not exposed to BI
+    intermediate:
+      +schema: int
+      +materialized: ephemeral
+      +tags: ['intermediate']
+
+    # ---- MARTS : production-grade tables / incremental facts
+    marts:
+      +schema: mart
+      +materialized: table
+      +tags: ['mart']
+
+      core:
+        +tags: ['mart','core','daily']
+
+      finance:
+        +tags: ['mart','finance','hourly']
+
+      risk:
+        +tags: ['mart','risk','hourly']
+
+# ----------------------------------------------------------------------------
+# Seeds
+# ----------------------------------------------------------------------------
+seeds:
+  finance_analytics:
+    +schema: seed
+    exchange_rates:
+      +column_types:
+        rate_to_usd: numeric(18,6)
+
+# ----------------------------------------------------------------------------
+# Snapshots (SCD-2)
+# ----------------------------------------------------------------------------
+snapshots:
+  finance_analytics:
+    +target_schema: snapshots
+    +strategy: check
+    +invalidate_hard_deletes: true
+
+# ----------------------------------------------------------------------------
+# Query tagging for cost attribution in Snowflake query_history
+# ----------------------------------------------------------------------------
+on-run-start:
+  - "{{ set_query_tag() }}"
+
+on-run-end:
+  - "{{ log_dbt_run_results() }}"

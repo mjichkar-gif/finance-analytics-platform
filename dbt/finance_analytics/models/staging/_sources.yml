@@ -1,0 +1,89 @@
+version: 2
+
+sources:
+  - name: fin_raw
+    description: |
+      Raw landed data from Fivetran (Google Sheets connectors). Immutable.
+      Schema-drift in this source breaks the build, which is the intended
+      behaviour — never modify these tables manually.
+    database: FIN_ANALYTICS
+    schema:   FIN_RAW
+    loader:   fivetran
+    loaded_at_field: _FIVETRAN_SYNCED
+
+    # Project-wide freshness expectations
+    freshness:
+      warn_after:  { count: 6,  period: hour }
+      error_after: { count: 24, period: hour }
+
+    tables:
+
+      - name: raw_customers
+        description: 1 row per customer master record
+        loaded_at_field: _FIVETRAN_SYNCED
+        freshness:
+          warn_after:  { count: 2, period: hour }
+          error_after: { count: 12, period: hour }
+        columns:
+          - name: customer_id
+            description: Source-system customer identifier
+            tests:
+              - not_null
+          - name: customer_segment
+            description: Retail / SMB / Corporate / Private Banking / HNI
+          - name: risk_category
+          - name: region
+          - name: onboarding_date
+
+      - name: raw_accounts
+        description: 1 row per account
+        columns:
+          - name: account_id
+            tests: [not_null]
+          - name: customer_id
+            tests: [not_null]
+          - name: branch_id
+          - name: account_status
+          - name: open_date
+
+      - name: raw_transactions
+        description: 1 row per transaction (highest volume)
+        loaded_at_field: _FIVETRAN_SYNCED
+        freshness:
+          warn_after:  { count: 30, period: minute }
+          error_after: { count: 2,  period: hour }
+        columns:
+          - name: transaction_id
+            tests: [not_null]
+          - name: account_id
+            tests: [not_null]
+          - name: amount
+          - name: currency
+          - name: transaction_timestamp
+            tests: [not_null]
+          - name: transaction_status
+
+      - name: raw_loans
+        columns:
+          - name: loan_id
+            tests: [not_null]
+          - name: customer_id
+            tests: [not_null]
+          - name: loan_amount
+          - name: loan_status
+          - name: disbursement_date
+
+      - name: raw_branches
+        columns:
+          - name: branch_id
+            tests: [not_null, unique]
+          - name: region
+
+      - name: raw_calendar_dim
+        columns:
+          - name: date_key
+            tests: [not_null, unique]
+          - name: year
+          - name: quarter
+          - name: month
+          - name: fiscal_period
