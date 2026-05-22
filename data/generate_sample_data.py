@@ -103,6 +103,7 @@ def gen_customers(n: int = 80) -> list[list]:
     rows.append(["C00005", "Duplicate Record", "Retail", "LOW", "EMEA", "2022-06-15"])
     return rows
 
+# tfcvgbh
 
 # ---------------------------------------------------------------------------
 # 3. accounts
